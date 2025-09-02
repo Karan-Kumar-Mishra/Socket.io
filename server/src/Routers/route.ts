@@ -6,7 +6,7 @@ export default function router() {
   io.on("connection", (socket) => {
     io.use(authentication)
     console.log("some one is try to connect..", socket.id);
-    socket.on('user_msg', (data) => user_msg(socket, data));
-    socket.on('grp_msg', (data) => grp_msg(socket, data));
+    socket.on('user_msg', (data,callback) => user_msg(socket, data,callback));
+    socket.on('grp_msg', (data,callback) => grp_msg(socket, data,callback));
   });
 }

@@ -23,7 +23,6 @@ function App() {
       socket.on('grp_ntfy', (data: string) => {
         setmessage((prev) => [...prev, data]);
         scroll_to_bottom();
-
       })
 
     });
@@ -40,12 +39,19 @@ function App() {
       const roomid = roomRef.current?.value.trim();
       if (roomid == null || roomid.length == 0 || roomid == undefined) {
         console.log("transmit the group message ....", msg)
-      //  PutSelfMsg(msg)
+
         scroll_to_bottom();
-        socket.emit('grp_msg', msg);
+        socket.emit('grp_msg', msg, (res: { status: string }) => {
+          PutSelfMsg(msg, "green")
+          console.log(res.status)
+        });
       }
       else {
-        socket.emit('user_msg', { message: msg, room: roomid });
+
+        socket.emit('user_msg', { message: msg, room: roomid }, (res: { status: string }) => {
+          PutSelfMsg(msg, "green")
+          console.log(res.status)
+        });
       }
       e.currentTarget.value = '';
     }
@@ -53,6 +59,7 @@ function App() {
 
   return (
     <div className="bg-neutral-800 h-screen  text-white flex justify-center flex-col items-center ">
+   
       <div className='message_window font-extrabold font-serif m-2  w-200 h-100 overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [::-webkit-scrollbar]:hidden'>
         {messge.map((msg) => {
           return (
@@ -80,6 +87,7 @@ function App() {
         />
         <h4 className={`mt-1 p-2 text-black ${socketId.length == 0 ? 'bg-red-400' : ' bg-green-600'}`}>ID: {socketId}</h4>
       </div>
+      
     </div>
   );
 }
